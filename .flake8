@@ -1,0 +1,6 @@
+[flake8]
+# Ignored:
+#   W292    Whitespace at end of file
+#   W503    Line break before binary operator (argues with black)
+ignore = W292 W503
+max-line-length = 88
