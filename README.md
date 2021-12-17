@@ -43,7 +43,7 @@ curl -X GET http://localhost:4200/foo/bar\?foo\=bar\&foo\=baz\&der\=p
 ## POST
 
 ```shell
-curl -X POST http://localhost:4200/user/accout -d '{"username": "foobar", "org": "beez_neez"}' | jq|pbcopy
+curl -X POST http://localhost:4200/user/accout -d '{"username": "foobar", "org": "beez_neez"}'
 ```
 
 ```json
