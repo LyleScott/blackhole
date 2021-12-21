@@ -15,7 +15,10 @@ Supported verbs:
 ## Usage
 
 You can make life easy with Docker or bootstrap your own virtual environment using
-`requirements.txt`
+`requirements.txt`.
+
+A webserver is started that you can use the supported HTTP verbs against. Details of
+the request are printed to stdout.
 
 ### Docker
 
