@@ -1,9 +1,10 @@
+import json
+from datetime import datetime
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Request, status
 from fastapi.responses import JSONResponse
-
 
 router = APIRouter()
 
@@ -28,34 +29,48 @@ async def _parse_data(request: Request) -> Optional[Dict[str, Any]]:
 
 
 async def _response(path: str, request: Request) -> JSONResponse:
-    return JSONResponse({
+    """A helper for returning particulars in a response."""
+    data = {
         "path": path,
         "query": _parse_query(request),
         "headers": _parse_headers(request),
         "data": await _parse_data(request),
-    })
+    }
+
+    # Print output.
+    print(f"/ --- {datetime.now().isoformat()} " + "-" * 40)
+    print(json.dumps(data, indent=2))
+    print("\\ " + "-" * 70)
+
+    # Also return output to HTTP client.
+    return JSONResponse(data)
 
 
-@router.get("/{path:path}", status_code=status.HTTP_200_OK)
-async def index(path: str, request: Request) -> JSONResponse:
+@router.get("{path:path}", status_code=status.HTTP_200_OK)
+async def http_get(path: str, request: Request) -> JSONResponse:
     return await _response(path, request)
 
 
-@router.post("/{path:path}", status_code=status.HTTP_201_CREATED)
-async def index(path: str, request: Request) -> JSONResponse:
+@router.post("{path:path}", status_code=status.HTTP_201_CREATED)
+async def http_post(path: str, request: Request) -> JSONResponse:
     return await _response(path, request)
 
 
-@router.put("/{path:path}", status_code=status.HTTP_200_OK)
-async def index(path: str, request: Request) -> JSONResponse:
+@router.put("{path:path}", status_code=status.HTTP_200_OK)
+async def http_put(path: str, request: Request) -> JSONResponse:
     return await _response(path, request)
 
 
-@router.patch("/{path:path}", status_code=status.HTTP_200_OK)
-async def index(path: str, request: Request) -> JSONResponse:
+@router.patch("{path:path}", status_code=status.HTTP_200_OK)
+async def http_patch(path: str, request: Request) -> JSONResponse:
     return await _response(path, request)
 
 
-@router.options("/{path:path}", status_code=status.HTTP_200_OK)
-async def index(path: str, request: Request) -> JSONResponse:
+@router.delete("{path:path}", status_code=status.HTTP_200_OK)
+async def http_delete(path: str, request: Request) -> JSONResponse:
+    return await _response(path, request)
+
+
+@router.options("{path:path}", status_code=status.HTTP_200_OK)
+async def http_options(path: str, request: Request) -> JSONResponse:
     return await _response(path, request)
