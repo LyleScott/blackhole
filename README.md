@@ -10,6 +10,31 @@ Supported verbs:
 - PATCH
 - DELETE
 - OPTIONS
+- ... easy to add more!
+
+## Usage
+
+You can make life easy with Docker or bootstrap your own virtual environment using
+`requirements.txt`
+
+### Docker
+
+This will listen for HTTP requests to http://localhost:4200
+
+```shell
+docker-compose up --build
+```
+
+### Python Virtualenv
+
+You can use whatever virtual environment manager you want instead of the stdlib one.
+
+```shell
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -r requirements.txt
+./start_server.sh
+```
 
 ## Examples
 
