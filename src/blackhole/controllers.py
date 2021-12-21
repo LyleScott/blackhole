@@ -10,6 +10,7 @@ router = APIRouter()
 
 
 def _parse_query(request: Request) -> Dict[str, List[str]]:
+    """JSONify Request query parameters."""
     query = {}
     for k, v in sorted(request.query_params.multi_items()):
         query.setdefault(k, []).append(v)
@@ -18,10 +19,12 @@ def _parse_query(request: Request) -> Dict[str, List[str]]:
 
 
 def _parse_headers(request: Request) -> Dict[str, str]:
+    """JSONify Request headers."""
     return {k: str(request.headers[k]) for k in sorted(request.headers)}
 
 
 async def _parse_data(request: Request) -> Optional[Dict[str, Any]]:
+    """Helper for attempting to parse the request body as JSON."""
     try:
         return await request.json()
     except JSONDecodeError:
@@ -31,11 +34,15 @@ async def _parse_data(request: Request) -> Optional[Dict[str, Any]]:
 async def _response(path: str, request: Request) -> JSONResponse:
     """A helper for returning particulars in a response."""
     data = {
-        "path": path,
-        "query": _parse_query(request),
+        "method": request.method,
         "headers": _parse_headers(request),
-        "data": await _parse_data(request),
+        "query": _parse_query(request),
+        "path": path,
     }
+
+    # Only show this field with "write HTTP methods".
+    if request.method in ("POST", "PUT", "PATCH"):
+        data["data"] = await _parse_data(request)
 
     # Print output.
     print(f"/ --- {datetime.now().isoformat()} " + "-" * 40)
